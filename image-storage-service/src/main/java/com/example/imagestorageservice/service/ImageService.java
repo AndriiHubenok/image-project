@@ -59,6 +59,21 @@ public class ImageService {
         }
     }
 
+    public boolean deleteImage(String filename) {
+        try {
+            minioClient.removeObject(
+                    RemoveObjectArgs.builder()
+                            .bucket(bucketName)
+                            .object(filename)
+                            .build()
+            );
+            return true;
+        } catch (Exception e) {
+            System.err.println("Помилка при видаленні файлу з MinIO: " + e.getMessage());
+            return false;
+        }
+    }
+
     private void ensureBucketExists() throws InvalidKeyException {
         boolean found = false;
         try {

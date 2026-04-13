@@ -1,5 +1,6 @@
 package com.example.imagestorageservice.controller;
 
+import com.example.imagestorageservice.dto.DeleteImageResultDTO;
 import com.example.imagestorageservice.dto.PostImageResultDTO;
 import com.example.imagestorageservice.exceptions.InvalidFileTypeException;
 import com.example.imagestorageservice.service.ImageService;
@@ -66,5 +67,14 @@ public class ImageController {
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(contentType))
                 .body(new InputStreamResource(inputStream));
+    }
+
+    @DeleteMapping("/{filename}")
+    public ResponseEntity<DeleteImageResultDTO> deleteImage(@PathVariable String filename) {
+        boolean isDeleted = imageService.deleteImage(filename);
+        if (isDeleted) {
+            return ResponseEntity.ok(new DeleteImageResultDTO("Image deleted successfully", filename));
+        }
+        return ResponseEntity.notFound().build();
     }
 }
