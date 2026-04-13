@@ -1,0 +1,56 @@
+version: "3.9"
+
+services:
+  # =========================
+  # IMAGE STORAGE SERVICE
+  # =========================
+  image-service:
+    build:
+      context: ./image-storage-service
+      dockerfile: Dockerfile
+    container_name: image-service
+    ports:
+      - "127.0.0.1:8089:8088"
+    env_file:
+      - ./image-storage-service/.env
+    depends_on:
+      image-storage:
+        condition: service_healthy
+    networks:
+      - microservice-network
+
+  # =========================
+  # MINIO
+  # =========================
+  image-storage:
+    image: minio/minio
+    container_name: image-storage
+    command: server /data --console-address ":9001"
+    ports:
+      - "127.0.0.1:9002:9000"
+      - "127.0.0.1:9003:9001"
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin123
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    volumes:
+      - image_data:/data
+    networks:
+      - microservice-network
+
+# =========================
+# VOLUMES
+# =========================
+volumes:
+  image_data:
+  
+# =========================
+# NETWORK
+# =========================
+networks:
+  microservice-network:
