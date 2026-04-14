@@ -1,5 +1,6 @@
 package com.example.imagestorageservice.service;
 
+import com.example.imagestorageservice.amqp.MessageSender;
 import io.minio.*;
 import io.minio.errors.*;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ImageService {
     private final MinioClient minioClient;
+    private final MessageSender messageSender;
 
     @Value("${minio.bucket-name}")
     private String bucketName;
@@ -37,6 +39,7 @@ public class ImageService {
                             .stream(inputStream, file.getSize(), -1l)
                             .build()
             );
+            messageSender.send(filename);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -67,6 +70,7 @@ public class ImageService {
                             .object(filename)
                             .build()
             );
+            messageSender.delete(filename);
             return true;
         } catch (Exception e) {
             System.err.println("Помилка при видаленні файлу з MinIO: " + e.getMessage());

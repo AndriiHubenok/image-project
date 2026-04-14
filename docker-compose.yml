@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   # =========================
   # IMAGE STORAGE SERVICE
@@ -16,6 +14,8 @@ services:
     depends_on:
       image-storage:
         condition: service_healthy
+      message-broker:
+        condition: service_started
     networks:
       - microservice-network
 
@@ -43,11 +43,78 @@ services:
     networks:
       - microservice-network
 
+  # =========================
+  # RabbitMQ
+  # =========================
+  message-broker:
+    image: rabbitmq:3-management
+    container_name: message-broker
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    env_file:
+      - ./image-storage-service/.env
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+    volumes:
+      - rabbitmq_image_data:/var/lib/rabbitmq
+    networks:
+      - microservice-network
+
+  # =========================
+  # IMAGE AUDIT SERVICE
+  # =========================
+  image-audit-service:
+    build:
+      context: ./image-audit-service
+      dockerfile: Dockerfile
+    container_name: image-audit-service
+    ports:
+      - "127.0.0.1:8091:8090"
+    env_file:
+      - ./image-audit-service/.env
+    depends_on:
+      message-broker:
+        condition: service_healthy
+      audit-db:
+        condition: service_healthy
+    networks:
+      - microservice-network
+
+  # =========================
+  # POSTGRESQL DATABASE
+  # =========================
+  audit-db:
+    image: postgres:16-alpine
+    container_name: audit-db
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: audit_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d audit_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+    volumes:
+      - audit_data:/var/lib/postgresql/data
+    networks:
+      - microservice-network
+
 # =========================
 # VOLUMES
 # =========================
 volumes:
   image_data:
+  rabbitmq_image_data:
+  audit_data:
   
 # =========================
 # NETWORK
