@@ -22,7 +22,7 @@ public class ImageRecord {
     @Enumerated(EnumType.STRING)
     private Action action;
 
-    private LocalDateTime date = LocalDateTime.now();
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     public ImageRecord(String filename, Action action) {
         this.filename = filename;
