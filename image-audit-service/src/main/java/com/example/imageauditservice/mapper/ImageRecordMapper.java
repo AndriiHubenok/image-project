@@ -1,12 +1,10 @@
 package com.example.imageauditservice.mapper;
 
-import com.example.imageauditservice.dto.GetImageRecordDTO;
+import com.example.imageauditservice.dto.image.GetImageRecordDTO;
 import com.example.imageauditservice.entities.ImageRecord;
 import lombok.AllArgsConstructor;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component

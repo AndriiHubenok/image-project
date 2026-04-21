@@ -15,7 +15,25 @@ services:
       image-storage:
         condition: service_healthy
       message-broker:
-        condition: service_started
+        condition: service_healthy
+    networks:
+      - microservice-network
+
+  # =====================
+  # SPRING AI TEXT MODERATION
+  # =====================
+  moderation-service:
+    build:
+      context: ./text-moderation-service
+      dockerfile: Dockerfile
+    container_name: moderation-service
+    ports:
+      - "127.0.0.1:8093:8092"
+    env_file:
+      - ./text-moderation-service/.env
+    depends_on:
+      message-broker:
+        condition: service_healthy
     networks:
       - microservice-network
 
@@ -52,8 +70,9 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-    env_file:
-      - ./image-storage-service/.env
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:-rabbitadmin}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS:-rabbitadmin123}
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
       interval: 10s

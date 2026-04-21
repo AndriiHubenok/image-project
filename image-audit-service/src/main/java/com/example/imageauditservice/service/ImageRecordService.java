@@ -1,13 +1,12 @@
 package com.example.imageauditservice.service;
 
-import com.example.imageauditservice.dto.Action;
-import com.example.imageauditservice.dto.GetImageRecordDTO;
+import com.example.imageauditservice.dto.enums.Action;
+import com.example.imageauditservice.dto.image.GetImageRecordDTO;
 import com.example.imageauditservice.entities.ImageRecord;
 import com.example.imageauditservice.mapper.ImageRecordMapper;
 import com.example.imageauditservice.repository.ImageRecordRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Optional;

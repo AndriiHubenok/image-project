@@ -1,10 +1,9 @@
 package com.example.imageauditservice.controller;
 
 import com.example.imageauditservice.config.exception.ImageRecordNotFound;
-import com.example.imageauditservice.dto.GetImageRecordDTO;
+import com.example.imageauditservice.dto.image.GetImageRecordDTO;
 import com.example.imageauditservice.service.ImageRecordService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

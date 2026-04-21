@@ -1,6 +1,6 @@
 package com.example.imageauditservice.entities;
 
-import com.example.imageauditservice.dto.Action;
+import com.example.imageauditservice.dto.enums.Action;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

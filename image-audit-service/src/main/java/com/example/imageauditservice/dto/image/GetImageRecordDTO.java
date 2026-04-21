@@ -1,5 +1,6 @@
-package com.example.imageauditservice.dto;
+package com.example.imageauditservice.dto.image;
 
+import com.example.imageauditservice.dto.enums.Action;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
