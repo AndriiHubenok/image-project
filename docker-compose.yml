@@ -16,6 +16,7 @@ services:
         condition: service_healthy
       message-broker:
         condition: service_healthy
+    restart: unless-stopped
     networks:
       - microservice-network
 
@@ -34,6 +35,7 @@ services:
     depends_on:
       message-broker:
         condition: service_healthy
+    restart: unless-stopped
     networks:
       - microservice-network
 
@@ -74,11 +76,11 @@ services:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:-rabbitadmin}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS:-rabbitadmin123}
     healthcheck:
-      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      test: ["CMD-SHELL", "rabbitmq-diagnostics -q ping && rabbitmq-diagnostics -q check_port_listener 5672"]
       interval: 10s
       timeout: 5s
-      retries: 10
-      start_period: 15s
+      retries: 15
+      start_period: 30s
     volumes:
       - rabbitmq_image_data:/var/lib/rabbitmq
     networks:
@@ -101,6 +103,7 @@ services:
         condition: service_healthy
       audit-db:
         condition: service_healthy
+    restart: unless-stopped
     networks:
       - microservice-network
 

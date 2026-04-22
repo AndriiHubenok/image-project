@@ -2,6 +2,8 @@ package com.example.imageauditservice.service;
 
 import com.example.imageauditservice.amqp.MessageSender;
 import com.example.imageauditservice.dto.enums.Status;
+import com.example.imageauditservice.dto.response.GetRejectedResponseDTO;
+import com.example.imageauditservice.dto.response.GetResponseDTO;
 import com.example.imageauditservice.dto.response.PostResponseDTO;
 import com.example.imageauditservice.dto.response.UpdateModerationResultDTO;
 import com.example.imageauditservice.entities.RejectedResponse;
@@ -12,6 +14,7 @@ import com.example.imageauditservice.repository.ResponseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -28,6 +31,16 @@ public class ResponseService {
         response = responseRepository.save(response);
         messageSender.send(responseMapper.responseToModeration(response));
 
+    }
+
+    public List<GetResponseDTO> getAllResponses() {
+        List<Response> responses = responseRepository.findAll();
+        return responses.stream().map(responseMapper::toGetResponseDTO).toList();
+    }
+
+    public List<GetRejectedResponseDTO> getAllRejectedResponses() {
+        List<RejectedResponse> rejectedResponses = rejectedResponseRepository.findAll();
+        return rejectedResponses.stream().map(responseMapper::toGetRejectedResponseDTO).toList();
     }
 
     public Response updateResponse(UpdateModerationResultDTO updatedResult){

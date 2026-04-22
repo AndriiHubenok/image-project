@@ -5,7 +5,6 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.JacksonJsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
@@ -27,6 +26,11 @@ public class MessageConfig {
     @Bean(name="responseUpload")
     public Queue responseUploadQueue() {
         return QueueBuilder.durable("responseUpload").quorum().build();
+    }
+
+    @Bean(name="responseModerateUpload")
+    public Queue responseModerateUploadQueue() {
+        return QueueBuilder.durable("responseModerateUpload").quorum().build();
     }
 
     @Profile("sender")

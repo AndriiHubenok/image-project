@@ -1,8 +1,6 @@
 package com.example.imageauditservice.mapper;
 
-import com.example.imageauditservice.dto.response.PostResponseDTO;
-import com.example.imageauditservice.dto.response.PostResponseModerationDTO;
-import com.example.imageauditservice.dto.response.UpdateModerationResultDTO;
+import com.example.imageauditservice.dto.response.*;
 import com.example.imageauditservice.entities.RejectedResponse;
 import com.example.imageauditservice.entities.Response;
 import org.springframework.stereotype.Component;
@@ -34,5 +32,21 @@ public class ResponseMapper {
         postResponseModerationDTO.setId(response.getId());
         postResponseModerationDTO.setText(response.getText());
         return postResponseModerationDTO;
+    }
+
+    public GetResponseDTO toGetResponseDTO(Response response) {
+        GetResponseDTO getResponseDTO = new GetResponseDTO();
+        getResponseDTO.setId(response.getId());
+        getResponseDTO.setText(response.getText());
+        getResponseDTO.setStatus(response.getStatus());
+        return getResponseDTO;
+    }
+
+    public GetRejectedResponseDTO toGetRejectedResponseDTO(RejectedResponse response) {
+        GetRejectedResponseDTO getRejectedResponseDTO = new GetRejectedResponseDTO();
+        getRejectedResponseDTO.setId(response.getId());
+        getRejectedResponseDTO.setText(response.getText());
+        getRejectedResponseDTO.setReason(response.getReason());
+        return getRejectedResponseDTO;
     }
 }
